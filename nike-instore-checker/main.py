@@ -32,7 +32,7 @@ async def nikeinstore(interaction, pid: str, address: str, max_distance: int):
         )
         await interaction.followup.send(embed=embed)
         return
-    nike = Nike.Nike()
+    nike = Nike.Nike(config['country_code'], config['language_code'])
     stores = nike.getStoreDetails(longitude, latitude, max_distance)
     if stores == None:
         embed = discord.Embed(

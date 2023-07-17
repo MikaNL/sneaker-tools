@@ -1,0 +1,8 @@
+{
+    "bot_token": "",
+    "guild_id": 123456,
+    "metrics_units": "km",
+    "country_code": "",
+    "language_code": "",
+    "embed_color": 16777215
+}

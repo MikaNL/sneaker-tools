@@ -60,7 +60,7 @@ class Nike:
         return sizes
     
     def getProductDetails(self, pid):
-        url = f"https://api.nike.com/product_feed/threads/v2?filter=language({self.language_code})&filter=marketplace(NL)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
+        url = f"https://api.nike.com/product_feed/threads/v2?filter=language({self.language_code})&filter=marketplace({self.country_code})&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
         response = requests.get(url, headers=self.headers)
         data = response.json()
         product = data['objects'][0]
@@ -70,7 +70,7 @@ class Nike:
         return name, slug, image
 
     def getSize(self, gtin, pid):
-        url = f"https://api.nike.com/product_feed/threads/v2?filter=language(nl)&filter=marketplace({self.country_code})&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
+        url = f"https://api.nike.com/product_feed/threads/v2?filter=language({self.language_code})&filter=marketplace({self.country_code})&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
         response = requests.get(url, headers=self.headers)
         data = response.json()
         product = data['objects'][0]

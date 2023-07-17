@@ -2,7 +2,9 @@ import requests, datetime
 from .UserAgent import UserAgent
 
 class Nike:
-    def __init__(self):
+    def __init__(self, country_code='NL', language_code='nl'):
+        self.country_code = country_code
+        self.language_code = language_code
         self.headers = {
             'accept': '*/*',
             'accept-encoding': 'gzip, deflate, br',
@@ -34,14 +36,14 @@ class Nike:
 
     def getStoreDetails(self, longitude, latitude, max_distance):
         longitude, latitude = self.formatCoordinates(longitude, latitude)
-        url = f"https://api.nike.com/store/store_locations/v1?language=nl-NL&search=%28%28%28brand%3D%3DNIKE%20and%20facilityType%3D%3DNIKE_OWNED_STORE%20or%20facilityType%3D%3DFRANCHISEE_PARTNER_STORE%20or%20facilityType%3D%3DMONO_BRAND_NON_FRANCHISEE_PARTNER_STORE%20and%20%28region%21%3DGREATER_CHINA%29%29%20and%20%28businessConcept%21%3DEMPLOYEE_STORE%20and%20businessConcept%21%3DBRAND_POP_UP%29%29%20and%20%28coordinates%3DgeoProximity%3D%7B%22maxDistance%22%3A%20{max_distance}%2C%20%22measurementUnits%22%3A%20%22km%22%2C%22latitude%22%3A%20{latitude}%2C%20%22longitude%22%3A%20{longitude}%7D%29%29"
+        url = f"https://api.nike.com/store/store_locations/v1?language={self.language_code}-{self.country_code}&search=%28%28%28brand%3D%3DNIKE%20and%20facilityType%3D%3DNIKE_OWNED_STORE%20or%20facilityType%3D%3DFRANCHISEE_PARTNER_STORE%20or%20facilityType%3D%3DMONO_BRAND_NON_FRANCHISEE_PARTNER_STORE%20and%20%28region%21%3DGREATER_CHINA%29%29%20and%20%28businessConcept%21%3DEMPLOYEE_STORE%20and%20businessConcept%21%3DBRAND_POP_UP%29%29%20and%20%28coordinates%3DgeoProximity%3D%7B%22maxDistance%22%3A%20{max_distance}%2C%20%22measurementUnits%22%3A%20%22km%22%2C%22latitude%22%3A%20{latitude}%2C%20%22longitude%22%3A%20{longitude}%7D%29%29"
         response = requests.get(url, headers=self.headers)
         data = response.json()
         if len(data['objects']) == 0:
             return None
         stores = []
         for store in data['objects']:
-            stores.append([store['id'], store['name'], store['address']['country'], f"https://www.nike.com/nl/retail/s/{store['slug']}"])
+            stores.append([store['id'], store['name'], store['address']['country'], f"https://www.nike.com/{self.language_code}/retail/s/{store['slug']}"])
         return stores
     
     def getAvailability(self, store_id, pid):
@@ -58,17 +60,17 @@ class Nike:
         return sizes
     
     def getProductDetails(self, pid):
-        url = f"https://api.nike.com/product_feed/threads/v2?filter=language(nl)&filter=marketplace(NL)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
+        url = f"https://api.nike.com/product_feed/threads/v2?filter=language({self.language_code})&filter=marketplace(NL)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
         response = requests.get(url, headers=self.headers)
         data = response.json()
         product = data['objects'][0]
-        slug = f"https://nike.com/nl/t/{product['publishedContent']['properties']['seo']['slug']}/{pid.upper()}"
+        slug = f"https://nike.com/{self.language_code}/t/{product['publishedContent']['properties']['seo']['slug']}/{pid.upper()}"
         image = product['productInfo'][0]['imageUrls']['productImageUrl']
         name = f"{product['productInfo'][0]['productContent']['title']} {product['productInfo'][0]['productContent']['colorDescription']}"
         return name, slug, image
 
     def getSize(self, gtin, pid):
-        url = f"https://api.nike.com/product_feed/threads/v2?filter=language(nl)&filter=marketplace(NL)&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
+        url = f"https://api.nike.com/product_feed/threads/v2?filter=language(nl)&filter=marketplace({self.country_code})&filter=channelId(d9a5bc42-4b9c-4976-858a-f159cf99c647)&filter=productInfo.merchProduct.styleColor({pid})"
         response = requests.get(url, headers=self.headers)
         data = response.json()
         product = data['objects'][0]

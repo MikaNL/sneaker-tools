@@ -57,6 +57,8 @@ async def nikeinstore(interaction, pid: str, address: str, max_distance: int):
             embed.add_field(name="Style code", value=pid.upper())
             embed.add_field(name="Store", value=f"[{store_name}]({store_url})")
             embed.add_field(name="Availability", value="Sold out at this store.")
+            embed.set_footer(text="• Made by @bontje34", icon_url="https://bontes.net/assets/img/logo.png")
+            await interaction.followup.send(embed=embed)
             continue
         for gtin, level, modification_date in sizes:
             size = nike.getSize(gtin, pid)

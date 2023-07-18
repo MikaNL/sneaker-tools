@@ -43,7 +43,7 @@ class StockX:
         self.headers["X-Operation-Name"] = "GetSearchResults"
         self.headers["Content-Type"] = "application/json"
         self.headers["Accept"] = "application/json"
-        self.headers["Accept-Encoding"] = "gzip, deflate, br"
+        self.headers["Accept-Encoding"] = "gzip, deflate"
         self.headers["App-Version"] = "2023.07.02.05"
         self.headers["X-Stockx-Device-Id"] = cookies["stockx_device_id"]
         self.headers["X-Stockx-Session-Id"] = cookies["stockx_session_id"]
